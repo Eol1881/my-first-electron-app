@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Blackjack Card Counter</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body class="body">
+    <section class="btns">
+      <div class="btns-wrapper">
+        <button class="ext__btn ext__btn--stand" onclick="sendRequest(-1)">2 - 6</button>
+        <button class="ext__btn ext__btn--hit" onclick="sendRequest(0)">7 - 9</button>
+        <button class="ext__btn ext__btn--split" onclick="sendRequest(1)">10 - A</button>
+        <button class="ext__btn ext__btn--reset" onclick="sendRequest('reset')"><span class="ext__btn--content">↺</span></button>
+      </div>
+    </section>
+    <section class="footer">
+      <p class="last-command-label">Last command: <span class="last-command-text">None</span></p>
+      <p class="current-value-label">Value: <span class="current-value-text">None</span></p>
+      <input class="color-picker" type="color">
+    </section>
+
+    <script>
+      const ipcRenderer = require('electron').ipcRenderer;
+      const body = document.querySelector(".body");
+      const colorPicker = document.querySelector('.color-picker');
+
+      function sendRequest(code) {
+        let textMsg;
+        switch (code) {
+          case -1:
+            textMsg = '2 - 6';
+            break;
+          case 0:
+            textMsg = '7 - 9';
+            break;
+          case 1:
+            textMsg = '10 - A';
+            break;
+          case 'reset':
+            textMsg = 'Reset';
+            break;
+          default:
+            textMsg = 'Something went wrong...';
+            break;
+        }
+        const lastCommand = document.querySelector(".last-command-text");
+        lastCommand.textContent = textMsg;
+        const currValue = document.querySelector(".current-value-text");
+
+        function sendGetRequest() {
+          fetch('http://localhost:8080/true')
+            .then(response => response.text())
+            .then(data => console.log(data))
+            .catch(error => console.error(error));
+        }
+
+        function sendPutRequest(code) {
+          fetch(`http://localhost:8080/add/${code}`, {
+            method: 'PUT'
+          })
+          .then(response => response.text())
+          .then(data => currValue.textContent = parseFloat(data).toFixed(3)) // console.log(parseFloat(data).toFixed(3))
+          .catch(error => console.error(error));
+        }
+
+        function sendDeleteRequest() {
+          fetch('http://localhost:8080/reset', {
+            method: 'DELETE'
+          })
+          .then(response => response.text())
+          .then(data => currValue.textContent = parseFloat(data).toFixed(3))
+          .catch(error => console.error(error));
+        }
+
+        if (typeof code === 'number') {
+          sendPutRequest(code);
+        } else {
+          sendDeleteRequest();
+        }
+
+      }
+
+      colorPicker.addEventListener('change', () => {
+        const color = colorPicker.value;
+        body.style.backgroundColor = color;
+
+        ipcRenderer.invoke('setBackgroundColor', color);
+        ipcRenderer.invoke('getBackgroundColor').then(backgroundColor => {
+          body.style.backgroundColor = backgroundColor;
+          colorPicker.value = backgroundColor;
+        });
+      });
+    </script>
+  </body>
+</html>

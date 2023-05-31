@@ -1,0 +1,21 @@
+{
+  "name": "black-jack-card-counter-app",
+  "version": "1.2.0",
+  "description": "Its cool",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package": "electron-packager . BlackJackHelper --platform=win32 --arch=x64 --out dist/ --icon=blackjack.ico"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^25.0.0",
+    "electron-builder": "^23.6.0"
+  },
+  "dependencies": {
+    "electron-packager": "^17.1.1",
+    "electron-store": "^8.1.0"
+  }
+}
