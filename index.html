@@ -73,13 +73,13 @@
 
       function sendRequest(code) {
         switch (code) {
-          case -1:
+          case 1:
             lastCommand.textContent = '2 - 6';
             break;
           case 0:
             lastCommand.textContent = '7 - 9';
             break;
-          case 1:
+          case -1:
             lastCommand.textContent = '10 - A';
             break;
           case 'revert':
