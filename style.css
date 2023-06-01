@@ -39,6 +39,7 @@
   font-family: UbuntuMono-Regular, sans-serif;
   margin: 0;
   user-select: none;
+  min-width: 10rem;
 }
 
 .last-command-text,
@@ -46,22 +47,28 @@
   font-family: UbuntuMono-Regular, sans-serif;
   user-select: none;
   white-space: nowrap;
+  font-weight: 700;
 }
 
 .btns-wrapper {
+  display: flex;
+
   user-select: none;
-  padding: 7px 0;
+  padding: 7px 7px;
   background-color: rgb(223, 213, 165);
   background-color: rgb(160, 201, 221);
   background-color: rgba(144, 176, 197, 0.2);
 }
 
+/*~~~~~~~~~~~~~~~~~~~~~ Buttons general */
 .ext__btn {
   border-radius: 10px;
   border: none;
 
   width: 110px;
   height: 40px;
+
+  padding: 0;
 
   font-size: 1rem;
   font-weight: 700;
@@ -83,6 +90,41 @@
   border-color: rgb(40, 167, 69);
 }
 
+.ext__btn:active {
+  background-color: rgba(241, 6, 6, 0.8);
+}
+
+.ext__btn--content {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transition: all 500ms ease;
+
+  background-size: 70%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~ Undo button */
+.ext__btn--undo {
+  width: 40px;
+  background-color: rgba(202, 77, 77, 0.8);
+  font-size: 1.5rem;
+  transition: transform 600ms ease;
+}
+
+.ext__btn--undo {
+  width: 40px;
+  background-color: rgba(202, 77, 77, 0.8);
+  font-size: 1.5rem;
+  transition: transform 600ms ease;
+}
+
+.ext__btn--content--undo {
+  background-image: url('undo.png');
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~ Reset button */
 .ext__btn--reset {
   width: 40px;
   background-color: rgba(202, 77, 77, 0.8);
@@ -94,15 +136,10 @@
   background-color: rgb(207, 64, 64);
 }
 
-.ext__btn--content {
-  display: block;
-  transition: all 500ms ease;
+.ext__btn--reset:hover .ext__btn--content {
+  transform: rotate(90deg);
 }
 
-.ext__btn:hover .ext__btn--content {
-  transform: rotate(-90deg);
-}
-
-.ext__btn:active {
-  background-color: rgba(241, 6, 6, 0.8);
+.ext__btn--content--reset {
+  background-image: url('reset.png');
 }

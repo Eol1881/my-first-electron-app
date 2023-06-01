@@ -8,10 +8,11 @@
   <body class="body">
     <section class="btns">
       <div class="btns-wrapper">
-        <button class="ext__btn ext__btn--stand" onclick="sendRequest(-1)">2 - 6</button>
+        <button class="ext__btn ext__btn--stand" onclick="sendRequest(1)">2 - 6</button>
         <button class="ext__btn ext__btn--hit" onclick="sendRequest(0)">7 - 9</button>
-        <button class="ext__btn ext__btn--split" onclick="sendRequest(1)">10 - A</button>
-        <button class="ext__btn ext__btn--reset" onclick="sendRequest('reset')"><span class="ext__btn--content">↺</span></button>
+        <button class="ext__btn ext__btn--split" onclick="sendRequest(-1)">10 - A</button>
+        <button class="ext__btn ext__btn--undo" onclick="sendRequest('revert')"><span class="ext__btn--content ext__btn--content--undo"></span></button>
+        <button class="ext__btn ext__btn--reset" onclick="sendRequest('reset')"><span class="ext__btn--content ext__btn--content--reset"></span></button>
       </div>
     </section>
     <section class="footer">
@@ -22,63 +23,77 @@
 
     <script>
       const ipcRenderer = require('electron').ipcRenderer;
+
       const body = document.querySelector(".body");
       const colorPicker = document.querySelector('.color-picker');
+      const lastCommand = document.querySelector(".last-command-text");
+      const currValue = document.querySelector(".current-value-text");
 
-      function sendRequest(code) {
-        let textMsg;
-        switch (code) {
-          case -1:
-            textMsg = '2 - 6';
-            break;
-          case 0:
-            textMsg = '7 - 9';
-            break;
-          case 1:
-            textMsg = '10 - A';
-            break;
-          case 'reset':
-            textMsg = 'Reset';
-            break;
-          default:
-            textMsg = 'Something went wrong...';
-            break;
-        }
-        const lastCommand = document.querySelector(".last-command-text");
-        lastCommand.textContent = textMsg;
-        const currValue = document.querySelector(".current-value-text");
-
-        function sendGetRequest() {
-          fetch('http://localhost:8080/true')
-            .then(response => response.text())
-            .then(data => console.log(data))
-            .catch(error => console.error(error));
-        }
-
-        function sendPutRequest(code) {
-          fetch(`http://localhost:8080/add/${code}`, {
-            method: 'PUT'
-          })
-          .then(response => response.text())
-          .then(data => currValue.textContent = parseFloat(data).toFixed(3)) // console.log(parseFloat(data).toFixed(3))
-          .catch(error => console.error(error));
+      class Request {
+        constructor(code) {
+          this.code = code;
+          this.defaultUrl = 'http://localhost:8080/';
+          this.url;
+          switch (code) {
+            case -1:
+              this.method = 'PUT';
+              break;
+            case 0:
+              this.method = 'PUT';
+              break;
+            case 1:
+              this.method = 'PUT';
+              break;
+            case 'revert':
+              this.method = 'PATCH'
+              break;
+            case 'reset':
+              this.method = 'DELETE'
+              break;
+            default:
+              throw new Error('Wrong request code recieved')
+              break;
+          }
+          if (typeof this.code === 'number') {
+            this.url = `${this.defaultUrl}add/${this.code}`
+          } else {
+            this.url = `${this.defaultUrl}${this.code}`
+          }
         }
 
-        function sendDeleteRequest() {
-          fetch('http://localhost:8080/reset', {
-            method: 'DELETE'
+        send() {
+          fetch(this.url, {
+            method: this.method
           })
           .then(response => response.text())
           .then(data => currValue.textContent = parseFloat(data).toFixed(3))
           .catch(error => console.error(error));
         }
+      }
 
-        if (typeof code === 'number') {
-          sendPutRequest(code);
-        } else {
-          sendDeleteRequest();
+      function sendRequest(code) {
+        switch (code) {
+          case -1:
+            lastCommand.textContent = '2 - 6';
+            break;
+          case 0:
+            lastCommand.textContent = '7 - 9';
+            break;
+          case 1:
+            lastCommand.textContent = '10 - A';
+            break;
+          case 'revert':
+            lastCommand.textContent = 'Revert';
+            break;
+          case 'reset':
+            lastCommand.textContent = 'Reset';
+            break;
+          default:
+            lastCommand.textContent = 'Something went wrong...';
+            break;
         }
 
+        new Request(code).send();
       }
 
       colorPicker.addEventListener('change', () => {

@@ -9,13 +9,16 @@ function createWindow () {
   const win = new BrowserWindow({
     icon: path.join(__dirname, 'icon.ico'),
     width: 460,
-    height: 180,
+    height: 160,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
     },
     alwaysOnTop: true,
-    minHeight: 190
+    minHeight: 180,
+    minWidth: 400,
+    maxHeight: 180,
+    maxWidth: 460
   })
 
   // Load the index.html file.

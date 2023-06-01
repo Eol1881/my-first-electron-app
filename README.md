@@ -5,7 +5,7 @@ This app is designed to help players count cards in the Black Jack card game, ke
 
 The value calculation logic is quite simple and I could add the logic to the front-end easily but the purpose of this project was partly to practice using HTTP requests and their methods and to work with a real server (a local java server in my case)
 
-Features: 
+Features:
 - Always on top
 - Customizable background color
 - Adjustable window size
@@ -14,3 +14,4 @@ TODO:
 - Move score value calculation logic to the front-end
 - Refactor using async/await instead of callbacks
 - Add more customizable settings to UI
+- Move scripts from HTML to sepparate js files
