@@ -27,7 +27,7 @@
   opacity: 0;
 }
 
-.footer {
+.counters {
   margin-top: 7px;
   padding: 0 5px;
 
@@ -181,4 +181,52 @@
 .bg-color-anim:hover {
   background-color: rgba(156, 180, 50, 0.9);
   font-size: 700;
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~ STATISTICS SECTION */
+.stat {
+  padding: 15px 0;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: 2;
+}
+
+.stat-card {
+  width: 45px;
+  height: 45px;
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.stat-card--two {
+  background-image: url(icons/two.png);
+}
+.stat-card--three {
+  background-image: url(icons/three.png);
+}
+.stat-card--four {
+  background-image: url(icons/four.png);
+}
+.stat-card--five {
+  background-image: url(icons/five.png);
+}
+.stat-card--six {
+  background-image: url(icons/six.png);
+}
+.stat-card--seven {
+  background-image: url(icons/seven.png);
+}
+.stat-card--eight {
+  background-image: url(icons/eight.png);
+}
+.stat-card--nine {
+  background-image: url(icons/nine.png);
+}
+.stat-card--ten {
+  background-image: url(icons/ten.png);
+}
+.stat-card--ace {
+  background-image: url(icons/ace.png);
 }
