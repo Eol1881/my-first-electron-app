@@ -59,6 +59,7 @@
     </section>
 
     <input class="color-picker" type="color">
+    <button class="ext__btn ext__btn--save">Save</button>
 
     <script>
       const ipcRenderer = require('electron').ipcRenderer;
@@ -96,10 +97,10 @@
           })
           .then(response => response.text())
           .then(data => {
+            if (this.method === 'GET') return;
             const dataObj = JSON.parse(data);
             console.log('> respond:', JSON.parse(data));
             if (this.method === 'POST') tipMsg.textContent = data;
-
             // CRUTCH!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TODO: REFACTOR ASAP
             const cardsLeftObj = dataObj.cardsInShoe;
             const cardsLeftObjKeys = Object.keys(cardsLeftObj);
@@ -151,9 +152,11 @@
       const guideMsg = document.querySelector('.messages__msg--guide');
       const btnsContainer = document.querySelector('.btns-wrapper');
       const cardLeftCounters = Array.from(document.querySelector('.stat').children);
+      const saveBtn = document.querySelector('.ext__btn--save');
       let historyArr = [];
       let turnIndex = 0;
       let currentReqBody = new RequestData;
+      const audio = new Audio('icons/snd.mp3')
 
       function updateTurnIndex(action) {
         if (action === 'add') turnIndex += 1;
@@ -217,7 +220,6 @@
 
       function action(event, code) {
         highlightBtn();
-        updateLastCommand(code);
 
         currentReqBody.addCardsToReqBody(code);
 
@@ -227,23 +229,22 @@
         if (typeof code === 'number') {
           updateTurnIndex('add');
           updateDealersCard('add');
+          updateLastCommand(code);
           const respondData = new Request(code, 'put', 'add').sendWithoutBody();
-          console.log(123123123, respondData);
-          //console.log('---', respondData.respond);
-          //updateCardLeftCounters(respondData);
           if (turnIndex > 2) new Request(code, 'post', 'hand', currentReqBody.getReqBody()).sendWithBody();
         } else if (code === 'revert' && turnIndex > 0) {
           updateTurnIndex('sub');
           updateDealersCard('revert');
+          updateLastCommand(code);
+          if (turnIndex < 2) tipMsg.textContent = '';
           const respondData = new Request(code, 'patch', 'revert').sendWithoutBody();
-          //updateCardLeftCounters(respondData);
         } else if (code === 'reset' && turnIndex > 0) {
           updateTurnIndex('reset');
           updateDealersCard('reset');
+          updateLastCommand(code);
           tipMsg.textContent = '';
           currentReqBody = new RequestData;
           const respondData = new Request(code, 'delete', 'reset').sendWithoutBody();
-          //updateCardLeftCounters(respondData);
         }
       }
 
@@ -252,6 +253,11 @@
         updateLastCommand('NG');
         tipMsg.textContent = '';
         currentReqBody = new RequestData;
+      })
+
+      saveBtn.addEventListener('click', () => {
+        new Request('', 'get', 'stats').sendWithoutBody();
+        audio.play();
       })
 
       colorPicker.addEventListener('change', () => {
