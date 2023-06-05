@@ -104,6 +104,8 @@
         if (code === 'reset') {
           acesCount = 0;
           acesCounter.textContent = acesCount;
+          historyArr.length = 0;
+          history.textContent = '';
         } else if (code === 11) {
           acesCount += 1;
           acesCounter.textContent = acesCount;
