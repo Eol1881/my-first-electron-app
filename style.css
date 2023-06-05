@@ -191,9 +191,15 @@
   width: 45px;
   height: 45px;
 
+  padding-top: 40px;
+
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+
+  font-family: UbuntuMono-Regular, sans-serif;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.8);
 }
 
 .stat-card--two {

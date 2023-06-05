@@ -9,13 +9,13 @@ function createWindow () {
   const win = new BrowserWindow({
     icon: path.join(__dirname, 'icon.ico'),
     width: 460,
-    height: 360,
+    height: 300,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
     },
     alwaysOnTop: true,
-    minHeight: 220,
+    minHeight: 310,
     minWidth: 580,
     //maxHeight: 280,
     //maxWidth: 800
@@ -25,7 +25,7 @@ function createWindow () {
   win.loadFile('index.html');
 
   // Load background color from electron store
-  const backgroundColor = store.get('backgroundColor', '#ffffff');
+  const backgroundColor = store.get('backgroundColor', '#4a8262;');
   win.webContents.on('did-finish-load', () => {
     win.webContents.executeJavaScript(`document.body.style.backgroundColor = '${backgroundColor}';`);
     win.webContents.executeJavaScript(`document.querySelector('.color-picker').value = '${backgroundColor}';`);
@@ -34,7 +34,7 @@ function createWindow () {
 
 // Get background color handler
 ipcMain.handle('getBackgroundColor', async () => {
-  return store.get('backgroundColor', '#ffffff');
+  return store.get('backgroundColor', '#4a8262;');
 })
 
 // Set background color handler

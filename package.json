@@ -1,11 +1,11 @@
 {
   "name": "black-jack-card-counter-app",
-  "version": "1.2.0",
-  "description": "Its cool",
+  "version": "2.0.1",
+  "description": "Its counts",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "package": "electron-packager . BlackJackHelper --platform=win32 --arch=x64 --out dist/ --icon=blackjack.ico"
+    "package": "electron-packager . BlackJackHelper-$(npm run -s version) --platform=win32 --arch=x64 --out dist/ --icon=blackjack.ico"
   },
   "keywords": [],
   "author": "",
