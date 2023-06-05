@@ -19,14 +19,26 @@
 .body {
   background-color: yellow;
   margin: 0;
+  overflow: hidden;
+}
+
+.hidden {
+  visibility: hidden;
+  opacity: 0;
 }
 
 .footer {
   margin-top: 7px;
   padding: 0 5px;
-  display: flex;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 60px;
+  grid-template-rows: repeat(2, 1fr);
+  row-gap: 10px;
+
+  /*display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between; */
   align-items: center;
 }
 
@@ -35,7 +47,8 @@
 }
 
 .last-command-label,
-.current-value-label {
+.current-value-label,
+.aces-label {
   font-family: UbuntuMono-Regular, sans-serif;
   margin: 0;
   user-select: none;
@@ -43,7 +56,8 @@
 }
 
 .last-command-text,
-.current-value-text {
+.current-value-text,
+.aces-text {
   font-family: UbuntuMono-Regular, sans-serif;
   user-select: none;
   white-space: nowrap;
@@ -65,7 +79,8 @@
   border-radius: 10px;
   border: none;
 
-  width: 110px;
+  width: 100%;
+  max-width: 60px;
   height: 40px;
 
   padding: 0;
@@ -80,7 +95,7 @@
   background-color: rgb(150, 206, 180);
   border-color: rgb(150, 206, 180);
 
-  transition: transform 200ms ease, background-color 200ms ease;
+  transition: transform 200ms ease, background-color 400ms ease;
 }
 
 .ext__btn:hover {
@@ -107,14 +122,8 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~ Undo button */
 .ext__btn--undo {
-  width: 40px;
-  background-color: rgba(202, 77, 77, 0.8);
-  font-size: 1.5rem;
-  transition: transform 600ms ease;
-}
-
-.ext__btn--undo {
-  width: 40px;
+  width: 100%;
+  max-width: 40px;
   background-color: rgba(202, 77, 77, 0.8);
   font-size: 1.5rem;
   transition: transform 600ms ease;
@@ -126,7 +135,8 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~ Reset button */
 .ext__btn--reset {
-  width: 40px;
+  width: 100%;
+  max-width: 40px;
   background-color: rgba(202, 77, 77, 0.8);
   font-size: 1.5rem;
   transition: transform 600ms ease;
@@ -142,4 +152,30 @@
 
 .ext__btn--content--reset {
   background-image: url('reset.png');
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~ History */
+.history {
+  margin: 0 10px;
+  padding: 0 5px;
+  height: 100%;
+  border-radius: 10px;
+  transition: all 500ms ease;
+  background-color: rgba(0, 0, 0, 0.4);
+  grid-column: 2 / span 2;
+
+  font-family: Motserrat, sans-serif;
+  display: flex;
+  align-items: center;
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~ Animations */
+.bg-color-anim {
+  background-color: rgba(156, 180, 50, 0.9);
+  font-size: 700;
+}
+
+.bg-color-anim:hover {
+  background-color: rgba(156, 180, 50, 0.9);
+  font-size: 700;
 }

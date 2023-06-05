@@ -8,16 +8,28 @@
   <body class="body">
     <section class="btns">
       <div class="btns-wrapper">
-        <button class="ext__btn ext__btn--stand" onclick="sendRequest(1)">2 - 6</button>
-        <button class="ext__btn ext__btn--hit" onclick="sendRequest(0)">7 - 9</button>
-        <button class="ext__btn ext__btn--split" onclick="sendRequest(-1)">10 - A</button>
-        <button class="ext__btn ext__btn--undo" onclick="sendRequest('revert')"><span class="ext__btn--content ext__btn--content--undo"></span></button>
-        <button class="ext__btn ext__btn--reset" onclick="sendRequest('reset')"><span class="ext__btn--content ext__btn--content--reset"></span></button>
+        <button class="ext__btn ext__btn--2" onclick="sendRequest(event, 2)">2</button>
+        <button class="ext__btn ext__btn--3" onclick="sendRequest(event, 3)">3</button>
+        <button class="ext__btn ext__btn--4" onclick="sendRequest(event, 4)">4</button>
+        <button class="ext__btn ext__btn--5" onclick="sendRequest(event, 5)">5</button>
+        <button class="ext__btn ext__btn--6" onclick="sendRequest(event, 6)">6</button>
+        <button class="ext__btn ext__btn--7" onclick="sendRequest(event, 7)">7</button>
+        <button class="ext__btn ext__btn--8" onclick="sendRequest(event, 8)">8</button>
+        <button class="ext__btn ext__btn--9" onclick="sendRequest(event, 9)">9</button>
+        <button class="ext__btn ext__btn--10" onclick="sendRequest(event, 10)">10</button>
+        <button class="ext__btn ext__btn--11" onclick="sendRequest(event, 11)">A</button>
+
+        <button class="ext__btn ext__btn--undo" onclick="sendRequest(event, 'revert')"><span class="ext__btn--content ext__btn--content--undo"></span></button>
+        <button class="ext__btn ext__btn--reset" onclick="sendRequest(event, 'reset')"><span class="ext__btn--content ext__btn--content--reset"></span></button>
       </div>
     </section>
     <section class="footer">
       <p class="last-command-label">Last command: <span class="last-command-text">None</span></p>
-      <p class="current-value-label">Value: <span class="current-value-text">None</span></p>
+      <p class="current-value-label">Value Hi-Lo: <span class="current-value-text" id="value-1">None</span></p>
+      <p class="current-value-label">Value Hi-Opt: <span class="current-value-text" id="value-2">None</span></p>
+      <p class="aces-label">Aces: <span class="aces-text">?</span></p>
+      <button class="history-btn">Show history</button>
+      <div class="history hidden"></div>
       <input class="color-picker" type="color">
     </section>
 
@@ -27,7 +39,17 @@
       const body = document.querySelector(".body");
       const colorPicker = document.querySelector('.color-picker');
       const lastCommand = document.querySelector(".last-command-text");
-      const currValue = document.querySelector(".current-value-text");
+      const currValue1 = document.querySelector("#value-1");
+      const currValue2 = document.querySelector("#value-2");
+      const history = document.querySelector(".history");
+      const historyBtn = document.querySelector(".history-btn");
+      const acesCounter = document.querySelector(".aces-text");
+      let acesCount = 0;
+      let historyArr = [];
+
+      historyBtn.addEventListener('click', () => {
+        history.classList.toggle('hidden');
+      })
 
       class Request {
         constructor(code) {
@@ -35,15 +57,6 @@
           this.defaultUrl = 'http://localhost:8080/';
           this.url;
           switch (code) {
-            case -1:
-              this.method = 'PUT';
-              break;
-            case 0:
-              this.method = 'PUT';
-              break;
-            case 1:
-              this.method = 'PUT';
-              break;
             case 'revert':
               this.method = 'PATCH'
               break;
@@ -51,7 +64,7 @@
               this.method = 'DELETE'
               break;
             default:
-              throw new Error('Wrong request code recieved')
+              this.method = 'PUT';
               break;
           }
           if (typeof this.code === 'number') {
@@ -66,31 +79,42 @@
             method: this.method
           })
           .then(response => response.text())
-          .then(data => currValue.textContent = parseFloat(data).toFixed(3))
+          .then(data => {
+            const dataArr = JSON.parse(data);
+            currValue1.textContent = parseFloat(dataArr[0]).toFixed(3);
+            currValue2.textContent = parseFloat(dataArr[1]).toFixed(3);
+          })
           .catch(error => console.error(error));
         }
       }
 
-      function sendRequest(code) {
-        switch (code) {
-          case 1:
-            lastCommand.textContent = '2 - 6';
-            break;
-          case 0:
-            lastCommand.textContent = '7 - 9';
-            break;
-          case -1:
-            lastCommand.textContent = '10 - A';
-            break;
-          case 'revert':
-            lastCommand.textContent = 'Revert';
-            break;
-          case 'reset':
-            lastCommand.textContent = 'Reset';
-            break;
-          default:
-            lastCommand.textContent = 'Something went wrong...';
-            break;
+      function sendRequest(event, code) {
+        const targetBtn = event.currentTarget;
+        targetBtn.classList.add('bg-color-anim');
+        setTimeout(() => { targetBtn.classList.remove('bg-color-anim'); }, 800);
+
+        lastCommand.textContent = code === 11 ? 'A' : code;
+        if (code !== 'revert') {
+          if (historyArr.length > 18) historyArr.shift();
+          historyArr.push(code);
+          const historyStr = historyArr.map(Number).reverse().join(' ');
+          history.textContent = historyStr.replace(/NaN/g, "⎌").replace(/11/g, "A");
+        }
+
+        if (code === 'reset') {
+          acesCount = 0;
+          acesCounter.textContent = acesCount;
+        } else if (code === 11) {
+          acesCount += 1;
+          acesCounter.textContent = acesCount;
+        } else if (code === 'revert') {
+          if (historyArr[historyArr.length - 1] === 11) {
+            acesCount -= 1;
+            acesCounter.textContent = acesCount;
+          }
+          historyArr.pop();
+          const historyStr = historyArr.map(Number).reverse().join(' ');
+          history.textContent = historyStr.replace(/NaN/g, "⎌").replace(/11/g, "A");
         }
 
         new Request(code).send();

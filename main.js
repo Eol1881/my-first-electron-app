@@ -15,10 +15,10 @@ function createWindow () {
       contextIsolation: false,
     },
     alwaysOnTop: true,
-    minHeight: 180,
-    minWidth: 400,
-    maxHeight: 180,
-    maxWidth: 460
+    minHeight: 220,
+    minWidth: 580,
+    //maxHeight: 280,
+    //maxWidth: 800
   })
 
   // Load the index.html file.
