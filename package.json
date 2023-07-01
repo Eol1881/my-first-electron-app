@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "package": "electron-packager . BlackJackHelper --platform=win32 --arch=x64 --out dist/ --icon=blackjack.ico"
+    "package": "electron-packager . BlackJackHelper --platform=win32 --arch=x64 --out dist/ --icon=blackjack.ico",
+    "start": "npx electron ."
   },
   "keywords": [],
   "author": "",
