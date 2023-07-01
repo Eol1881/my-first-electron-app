@@ -105,7 +105,9 @@
             const cardsLeftObj = dataObj.cardsInShoe;
             const cardsLeftObjKeys = Object.keys(cardsLeftObj);
             cardsLeftObjKeys.forEach((key, index) => {
-              cardLeftCounters[index].textContent = cardsLeftObj[key];
+              // cardLeftCounters[index].textContent = cardsLeftObj[key];
+              if (key === '10') cardLeftCounters[index].textContent = parseInt(cardsLeftObj[key]); // THE CRUTCH
+              else cardLeftCounters[index].textContent = parseInt(cardsLeftObj[key]) + 16; // THE CRUTCH
             });
 
             cardCounterValue1.textContent = parseFloat(dataObj.TrueCountHiLo).toFixed(2);
