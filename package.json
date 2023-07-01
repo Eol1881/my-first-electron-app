@@ -1,6 +1,6 @@
 {
   "name": "black-jack-card-counter-app",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Its counts",
   "main": "main.js",
   "scripts": {

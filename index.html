@@ -70,7 +70,7 @@
           this.method = method.toUpperCase();
           this.address = address;
           this.bodyData = bodyData || null;
-          this.defaultUrl = 'http://localhost:8080/';
+          this.defaultUrl = 'http://localhost:1110/';
           this.url = this.method === 'PUT' ? `${this.defaultUrl}${this.address}/${code}` : `${this.defaultUrl}${this.address}`;
         }
 
@@ -105,13 +105,13 @@
             const cardsLeftObj = dataObj.cardsInShoe;
             const cardsLeftObjKeys = Object.keys(cardsLeftObj);
             cardsLeftObjKeys.forEach((key, index) => {
-              // cardLeftCounters[index].textContent = cardsLeftObj[key];
-              if (key === '10') cardLeftCounters[index].textContent = parseInt(cardsLeftObj[key]); // THE CRUTCH
-              else cardLeftCounters[index].textContent = parseInt(cardsLeftObj[key]) + 16; // THE CRUTCH
+              cardLeftCounters[index].textContent = cardsLeftObj[key];
+              // if (key === '10') cardLeftCounters[index].textContent = parseInt(cardsLeftObj[key]); // HERE WAS THE CRUTCH
+              // else cardLeftCounters[index].textContent = parseInt(cardsLeftObj[key]) + 16; // HERE WAS THE CRUTCH
             });
 
             cardCounterValue1.textContent = parseFloat(dataObj.TrueCountHiLo).toFixed(2);
-            cardCounterValue2.textContent = parseFloat(dataObj.TrueCountHiOpt).toFixed(2);
+            cardCounterValue2.textContent = parseFloat(dataObj.TrueCountHiOpt2).toFixed(2);
           })
           .catch(error => console.error(error));
         }
