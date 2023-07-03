@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="UTF-8">
     <title>Blackjack Card Counter</title>
     <link rel="stylesheet" href="style.css">
-  </head>
-  <body class="body">
-    <section class="buttons">
-      <div class="messages">
+</head>
+<body class="body">
+<section class="buttons">
+    <div class="messages">
         <p class="messages__msg messages__msg--tip"></p>
         <p class="messages__msg messages__msg--guide"></p>
-      </div>
-      <div class="btns-wrapper">
+    </div>
+    <div class="btns-wrapper">
         <button class="ext__btn ext__btn--2" onclick="action(event, 2)">2</button>
         <button class="ext__btn ext__btn--3" onclick="action(event, 3)">3</button>
         <button class="ext__btn ext__btn--4" onclick="action(event, 4)">4</button>
@@ -23,144 +23,151 @@
         <button class="ext__btn ext__btn--10" onclick="action(event, 10)">10</button>
         <button class="ext__btn ext__btn--11" onclick="action(event, 11)">A</button>
 
-        <button class="ext__btn ext__btn--undo" onclick="action(event, 'revert')"><span class="ext__btn--content ext__btn--content--undo"></span></button>
-        <button class="ext__btn ext__btn--reset" onclick="action(event, 'reset')"><span class="ext__btn--content ext__btn--content--reset"></span></button>
-      </div>
-    </section>
-    <section class="counters">
-      <p class="last-command-label">Last command: <span class="last-command-text">None</span></p>
-      <p class="current-value-label">Value Hi-Lo: <span class="current-value-text" id="value-1">None</span></p>
-      <p class="current-value-label">Value Hi-Opt: <span class="current-value-text" id="value-2">None</span></p>
-      <button class="ext__btn ext__btn--new-deal">NEW DEAL</button>
-      <div class="history"></div>
-      <p class="current-value-label">Dealer's card: <span class="current-value-text" id="dealers-card">?</span></p>
-    </section>
-    <section class="stat">
-      <div class="stat-card stat-card--two"></div>
-      <div class="stat-card stat-card--three"></div>
-      <div class="stat-card stat-card--four"></div>
-      <div class="stat-card stat-card--five"></div>
-      <div class="stat-card stat-card--six"></div>
-      <div class="stat-card stat-card--seven"></div>
-      <div class="stat-card stat-card--eight"></div>
-      <div class="stat-card stat-card--nine"></div>
-      <div class="stat-card stat-card--ten"></div>
-      <div class="stat-card stat-card--ace"></div>
-      <p class="stat-left-counter stat-left-counter--two"></p>
-      <p class="stat-left-counter stat-left-counter--three"></p>
-      <p class="stat-left-counter stat-left-counter--four"></p>
-      <p class="stat-left-counter stat-left-counter--five"></p>
-      <p class="stat-left-counter stat-left-counter--six"></p>
-      <p class="stat-left-counter stat-left-counter--seven"></p>
-      <p class="stat-left-counter stat-left-counter--eight"></p>
-      <p class="stat-left-counter stat-left-counter--nine"></p>
-      <p class="stat-left-counter stat-left-counter--ten"></p>
-      <p class="stat-left-counter stat-left-counter--ace"></p>
-    </section>
+        <button class="ext__btn ext__btn--undo" onclick="action(event, 'revert')"><span
+                class="ext__btn--content ext__btn--content--undo"></span></button>
+        <button class="ext__btn ext__btn--reset" onclick="action(event, 'reset')"><span
+                class="ext__btn--content ext__btn--content--reset"></span></button>
+    </div>
+</section>
+<section class="counters">
+    <p class="current-value-label">Hi-Lo: <span class="current-value-text" id="value-1">None</span></p>
+    <p class="current-value-label">Hi-Opt2: <span class="current-value-text" id="value-2">None</span></p>
+    <p class="current-value-label">Halves: <span class="current-value-text" id="value-3">None</span></p>
+    <p class="last-command-label">Last command: <span class="last-command-text">None</span></p>
+    <button class="ext__btn ext__btn--new-deal">NEW DEAL</button>
+    <div class="history"></div>
+    <p class="current-value-label">Dealer's card: <span class="current-value-text" id="dealers-card">None</span></p>
+</section>
+<section class="stat">
+    <div class="stat-card stat-card--two"></div>
+    <div class="stat-card stat-card--three"></div>
+    <div class="stat-card stat-card--four"></div>
+    <div class="stat-card stat-card--five"></div>
+    <div class="stat-card stat-card--six"></div>
+    <div class="stat-card stat-card--seven"></div>
+    <div class="stat-card stat-card--eight"></div>
+    <div class="stat-card stat-card--nine"></div>
+    <div class="stat-card stat-card--ten"></div>
+    <div class="stat-card stat-card--ace"></div>
+    <p class="stat-left-counter stat-left-counter--two"></p>
+    <p class="stat-left-counter stat-left-counter--three"></p>
+    <p class="stat-left-counter stat-left-counter--four"></p>
+    <p class="stat-left-counter stat-left-counter--five"></p>
+    <p class="stat-left-counter stat-left-counter--six"></p>
+    <p class="stat-left-counter stat-left-counter--seven"></p>
+    <p class="stat-left-counter stat-left-counter--eight"></p>
+    <p class="stat-left-counter stat-left-counter--nine"></p>
+    <p class="stat-left-counter stat-left-counter--ten"></p>
+    <p class="stat-left-counter stat-left-counter--ace"></p>
+</section>
 
-    <input class="color-picker" type="color">
-    <button class="ext__btn ext__btn--save">Save</button>
+<input class="color-picker" type="color">
+<button class="ext__btn ext__btn--save">Save</button>
 
-    <script>
-      const ipcRenderer = require('electron').ipcRenderer;
+<script>
+    const ipcRenderer = require('electron').ipcRenderer;
 
-      class Request {
+    class Request {
         constructor(code, method, address, bodyData) {
-          this.code = code;
-          this.method = method.toUpperCase();
-          this.address = address;
-          this.bodyData = bodyData || null;
-          this.defaultUrl = 'http://localhost:1110/';
-          this.url = this.method === 'PUT' ? `${this.defaultUrl}${this.address}/${code}` : `${this.defaultUrl}${this.address}`;
+            this.code = code;
+            this.method = method.toUpperCase();
+            this.address = address;
+            this.bodyData = bodyData || null;
+            this.defaultUrl = 'http://localhost:1110/';
+            this.url = this.method === 'PUT' ? `${this.defaultUrl}${this.address}/${code}` : `${this.defaultUrl}${this.address}`;
         }
 
         sendWithBody() {
-          fetch(this.url, {
-            method: this.method,
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(this.bodyData),
-          })
-          .then(response => response.text())
-          .then(data => {
-            const dataObj = JSON.parse(data);
-            console.log('> respond:', data);
-            if (this.method === 'POST') tipMsg.textContent = data;
-          })
-          .catch(error => console.error(error));
+            fetch(this.url, {
+                method: this.method,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(this.bodyData),
+            })
+                .then(response => response.text())
+                .then(data => {
+                    const dataObj = JSON.parse(data);
+                    console.log('> respond:', data);
+                    if (this.method === 'POST') tipMsg.textContent = data;
+                })
+                .catch(error => console.error(error));
         }
 
         sendWithoutBody() {
-          fetch(this.url, {
-            method: this.method,
-          })
-          .then(response => response.text())
-          .then(data => {
-            if (this.method === 'GET') return;
-            const dataObj = JSON.parse(data);
-            console.log('> respond:', JSON.parse(data));
-            if (this.method === 'POST') tipMsg.textContent = data;
-            // CRUTCH!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TODO: REFACTOR ASAP
-            const cardsLeftObj = dataObj.cardsInShoe;
-            const cardsLeftObjKeys = Object.keys(cardsLeftObj);
-            cardsLeftObjKeys.forEach((key, index) => {
-              cardLeftCounters[index].textContent = cardsLeftObj[key];
-              // if (key === '10') cardLeftCounters[index].textContent = parseInt(cardsLeftObj[key]); // HERE WAS THE CRUTCH
-              // else cardLeftCounters[index].textContent = parseInt(cardsLeftObj[key]) + 16; // HERE WAS THE CRUTCH
-            });
+            fetch(this.url, {
+                method: this.method,
+            })
+                .then(response => response.text())
+                .then(data => {
+                    if (this.method === 'GET') return;
+                    const dataObj = JSON.parse(data);
+                    console.log('> respond:', JSON.parse(data));
+                    if (this.method === 'POST') tipMsg.textContent = data;
+                    // CRUTCH!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TODO: REFACTOR ASAP
+                    const cardsLeftObj = dataObj.cardsInShoe;
+                    const cardsLeftObjKeys = Object.keys(cardsLeftObj);
+                    cardsLeftObjKeys.forEach((key, index) => {
+                        cardLeftCounters[index].textContent = cardsLeftObj[key];
+                        // if (key === '10') cardLeftCounters[index].textContent = parseInt(cardsLeftObj[key]); // HERE WAS THE CRUTCH
+                        // else cardLeftCounters[index].textContent = parseInt(cardsLeftObj[key]) + 16; // HERE WAS THE CRUTCH
+                    });
 
-            cardCounterValue1.textContent = parseFloat(dataObj.TrueCountHiLo).toFixed(2);
-            cardCounterValue2.textContent = parseFloat(dataObj.TrueCountHiOpt2).toFixed(2);
-          })
-          .catch(error => console.error(error));
+                    cardCounterValue1.textContent = parseFloat(dataObj.trueCountHiLo).toFixed(2);
+                    cardCounterValue2.textContent = parseFloat(dataObj.trueCountHiOpt2).toFixed(2);
+                    cardCounterValue3.textContent = parseFloat(dataObj.trueCountHalves).toFixed(2);
+                })
+                .catch(error => console.error(error));
         }
-      }
+    }
 
-      class RequestData {
+    class RequestData {
         constructor() {
-          this.reqData = {
-            'playerCards': [],
-            'dealersCard': null
-          }
+            this.reqData = {
+                'playersCards': [],
+                'dealersCard': null
+            }
         }
+
         addCardsToReqBody(cardCode) {
-          if (typeof cardCode === 'number') {
-            turnIndex === 1 ? this.reqData.dealersCard = cardCode : this.reqData.playerCards.push(cardCode);
-            //console.log(this.reqData);
-          } else if (cardCode === 'reset') {
-            this.reqData.playerCards = [];
-            this.reqData.dealersCard = null;
-          } else if (cardCode === 'revert') {
-            turnIndex === 2 ? this.reqData.dealersCard = null : this.reqData.playerCards.pop();
-          }
+            if (typeof cardCode === 'number') {
+                turnIndex === 1 ? this.reqData.dealersCard = cardCode : this.reqData.playersCards.push(cardCode);
+                //console.log(this.reqData);
+            } else if (cardCode === 'reset') {
+                this.reqData.playersCards = [];
+                this.reqData.dealersCard = null;
+            } else if (cardCode === 'revert') {
+                turnIndex === 2 ? this.reqData.dealersCard = null : this.reqData.playersCards.pop();
+            }
 
-          return this;
+            return this;
         }
+
         getReqBody() {
-          return this.reqData;
+            return this.reqData;
         }
-      }
+    }
 
-      const body = document.querySelector(".body");
-      const colorPicker = document.querySelector('.color-picker');
-      const lastCommand = document.querySelector(".last-command-text");
-      const cardCounterValue1 = document.querySelector("#value-1");
-      const cardCounterValue2 = document.querySelector("#value-2");
-      const dealersCard = document.querySelector("#dealers-card");
-      const history = document.querySelector(".history");
-      const newDealBtn = document.querySelector(".ext__btn--new-deal");
-      const tipMsg = document.querySelector('.messages__msg--tip');
-      const guideMsg = document.querySelector('.messages__msg--guide');
-      const btnsContainer = document.querySelector('.btns-wrapper');
-      const cardLeftCounters = Array.from(document.querySelector('.stat').children);
-      const saveBtn = document.querySelector('.ext__btn--save');
-      let historyArr = [];
-      let turnIndex = 0;
-      let currentReqBody = new RequestData;
-      const audio = new Audio('icons/snd.mp3')
+    const body = document.querySelector(".body");
+    const colorPicker = document.querySelector('.color-picker');
+    const lastCommand = document.querySelector(".last-command-text");
+    const cardCounterValue1 = document.querySelector("#value-1");
+    const cardCounterValue2 = document.querySelector("#value-2");
+    const cardCounterValue3 = document.querySelector("#value-3");
+    const dealersCard = document.querySelector("#dealers-card");
+    const history = document.querySelector(".history");
+    const newDealBtn = document.querySelector(".ext__btn--new-deal");
+    const tipMsg = document.querySelector('.messages__msg--tip');
+    const guideMsg = document.querySelector('.messages__msg--guide');
+    const btnsContainer = document.querySelector('.btns-wrapper');
+    const cardLeftCounters = Array.from(document.querySelector('.stat').children);
+    const saveBtn = document.querySelector('.ext__btn--save');
+    let historyArr = [];
+    let turnIndex = 0;
+    let currentReqBody = new RequestData;
+    const audio = new Audio('icons/snd.mp3')
 
-      function updateTurnIndex(action) {
+    function updateTurnIndex(action) {
         if (action === 'add') turnIndex += 1;
         else if (action === 'sub') turnIndex -= 1;
         else turnIndex = 0;
@@ -169,58 +176,60 @@
         else if (turnIndex === 1) guideMsg.textContent = 'Dealer\'s card';
         else if (turnIndex === 2) guideMsg.textContent = '2nd player\'s card';
         else {
-          guideMsg.textContent = '';
-          return;
+            guideMsg.textContent = '';
+            return;
         }
 
         guideMsg.classList.add('highlight');
         setTimeout(() => {
-          guideMsg.classList.remove('highlight');
+            guideMsg.classList.remove('highlight');
         }, 400);
-      }
+    }
 
-      function updateLastCommand(code) {
+    function updateLastCommand(code) {
         lastCommand.textContent = code === 11 ? 'A' : code;
 
         if (code === 'reset') {
-          historyArr.length = 0;
-          history.textContent = '';
-          return;
+            historyArr.length = 0;
+            history.textContent = '';
+            return;
         } else if (code === 'revert') {
-          historyArr.pop();
+            historyArr.pop();
         } else if (code !== 'revert' && historyArr.length > 30) {
-          historyArr.shift();
-          historyArr.push(code);
+            historyArr.shift();
+            historyArr.push(code);
         } else {
-          historyArr.push(code);
+            historyArr.push(code);
         }
 
         const historyStr = historyArr.map(Number).reverse().join(' ');
         history.textContent = historyStr.replace(/NaN/g, "►").replace(/11/g, "A");
-      }
+    }
 
-      function highlightBtn() {
+    function highlightBtn() {
         const targetBtn = event.currentTarget;
         targetBtn.classList.add('bg-color-anim');
-        setTimeout(() => { targetBtn.classList.remove('bg-color-anim'); }, 800);
-      }
+        setTimeout(() => {
+            targetBtn.classList.remove('bg-color-anim');
+        }, 800);
+    }
 
-      function updateCardLeftCounters(respondData) {
+    function updateCardLeftCounters(respondData) {
         console.log('+++', respondData);
         const cardsLeftObj = JSON.parse(respondData).cardsInShoe;
         const cardsLeftObjKeys = Object.keys(cardsLeftObj);
         cardsLeftObjKeys.forEach((key, index) => {
-          cardLeftCounters[index].textContent = cardsLeftObj[key];
+            cardLeftCounters[index].textContent = cardsLeftObj[key];
         })
-      }
+    }
 
-      function updateDealersCard(action) {
+    function updateDealersCard(action) {
         if (action === 'add' && turnIndex === 2) dealersCard.textContent = currentReqBody.reqData.dealersCard;
         if (action === 'reset') dealersCard.textContent = '?';
         if (action === 'revert' && turnIndex === 1) dealersCard.textContent = '?';
-      }
+    }
 
-      function action(event, code) {
+    function action(event, code) {
         highlightBtn();
 
         currentReqBody.addCardsToReqBody(code);
@@ -229,49 +238,49 @@
         console.log(currentReqBody.reqData);
 
         if (typeof code === 'number') {
-          updateTurnIndex('add');
-          updateDealersCard('add');
-          updateLastCommand(code);
-          const respondData = new Request(code, 'put', 'add').sendWithoutBody();
-          if (turnIndex > 2) new Request(code, 'post', 'hand', currentReqBody.getReqBody()).sendWithBody();
+            updateTurnIndex('add');
+            updateDealersCard('add');
+            updateLastCommand(code);
+            const respondData = new Request(code, 'put', 'add').sendWithoutBody();
+            if (turnIndex > 2) new Request(code, 'post', 'hand', currentReqBody.getReqBody()).sendWithBody();
         } else if (code === 'revert' && turnIndex > 0) {
-          updateTurnIndex('sub');
-          updateDealersCard('revert');
-          updateLastCommand(code);
-          if (turnIndex < 2) tipMsg.textContent = '';
-          const respondData = new Request(code, 'patch', 'revert').sendWithoutBody();
+            updateTurnIndex('sub');
+            updateDealersCard('revert');
+            updateLastCommand(code);
+            if (turnIndex < 2) tipMsg.textContent = '';
+            const respondData = new Request(code, 'patch', 'revert').sendWithoutBody();
         } else if (code === 'reset' && turnIndex > 0) {
-          updateTurnIndex('reset');
-          updateDealersCard('reset');
-          updateLastCommand(code);
-          tipMsg.textContent = '';
-          currentReqBody = new RequestData;
-          const respondData = new Request(code, 'delete', 'reset').sendWithoutBody();
+            updateTurnIndex('reset');
+            updateDealersCard('reset');
+            updateLastCommand(code);
+            tipMsg.textContent = '';
+            currentReqBody = new RequestData;
+            const respondData = new Request(code, 'delete', 'reset').sendWithoutBody();
         }
-      }
+    }
 
-      newDealBtn.addEventListener('click', () => {
+    newDealBtn.addEventListener('click', () => {
         updateTurnIndex('reset');
         updateLastCommand('NG');
         tipMsg.textContent = '';
         currentReqBody = new RequestData;
-      })
+    })
 
-      saveBtn.addEventListener('click', () => {
+    saveBtn.addEventListener('click', () => {
         new Request('', 'get', 'stats').sendWithoutBody();
         audio.play();
-      })
+    })
 
-      colorPicker.addEventListener('change', () => {
+    colorPicker.addEventListener('change', () => {
         const color = colorPicker.value;
         body.style.backgroundColor = color;
 
         ipcRenderer.invoke('setBackgroundColor', color);
         ipcRenderer.invoke('getBackgroundColor').then(backgroundColor => {
-          body.style.backgroundColor = backgroundColor;
-          colorPicker.value = backgroundColor;
+            body.style.backgroundColor = backgroundColor;
+            colorPicker.value = backgroundColor;
         });
-      });
-    </script>
-  </body>
+    });
+</script>
+</body>
 </html>
